@@ -11,3 +11,6 @@
 
 # ignore everything in the build/ folder:
 build/*
+
+# ignore particular source files:
+src/uartstdio.c
