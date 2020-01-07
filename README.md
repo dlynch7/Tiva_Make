@@ -7,5 +7,7 @@ Pretty simple, but the Makefile also supports fancier stuff, especially floating
 
 ## Getting started
 ### What you need to install
+* Tivaware
+* The GNU Embedded Toolchain for Arm. Includes `arm-none-eabi-gcc` (a GCC cross compiler) and `arm-none-eabi-ld` (a GCC linker).
 
 ### What you need to modify
