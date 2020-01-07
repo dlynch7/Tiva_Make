@@ -8,7 +8,7 @@ Pretty simple, but the Makefile also supports fancier stuff, especially floating
 ## Setup
 Install the software listed below, then clone this repo.
 ### What you need to install
-* Tivaware
+* [Tivaware](http://software-dl.ti.com/tiva-c/SW-TM4C/latest/index_FDS.html)
 * The [GNU Embedded Toolchain for Arm](https://launchpad.net/gcc-arm-embedded/+download). Includes `arm-none-eabi-gcc` (a GCC cross compiler) and `arm-none-eabi-ld` (a GCC linker).
 * [lm4tools](https://github.com/utzig/lm4tools) - contains lm4flash, a command-line firmware flashing tool which our Makefile will use.
 
