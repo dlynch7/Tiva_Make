@@ -2,6 +2,8 @@
 *.ld
 
 # ignore compiled binary files and intermediate files produced during compilation:
+*.out
+*.d
 *.o
 *.s
 *.hex
