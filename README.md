@@ -77,7 +77,6 @@ FLASH_PATH = $(HOME)/Embedded/lm4tools/lm4flash
 # additional libraries:
 # libdriver.a path: tivaware/driverlib/gcc/
 DRIVERLIB_PATH = $(HOME)/Embedded/tivaware/driverlib/gcc
-LDLIBS = -L$(DRIVERLIB_PATH) -ldriver
 ```
 
 ### (Windows users) Editing paths in the Makefile
