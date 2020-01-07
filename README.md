@@ -36,14 +36,13 @@ echo "SUBSYSTEM=="usb", ATTRS{idVendor}=="1cbe", ATTRS{idProduct}=="00fd", MODE=
 
 ### Project structure
 Your project should reside in a folder.
-In that folder, there must be (at minimum) a Makefile and three subfolders: `src\`, `inc\`, and `build\`.
-TM4C...ld!
-* C files (`.c`) that you write go in `src\`.
-* Header files (`.h`) that you write go in `inc\`.
-* Files produced during building (compiling and linking) are automatically stored in the `build\` folder. You don't need to do anything yourself in the `build\` folder.
+In that folder, there must be (at minimum) a `Makefile`, a bootloader (`TM4C123GH6PM.ld`) and three subfolders: `src`, `inc`, and `build`.
+* C files (`.c`) that you write go in `src`.
+* Header files (`.h`) that you write go in `inc`.
+* Files produced during building (compiling and linking) are automatically stored in the `build` folder. You don't need to do anything yourself in the `build` folder.
 
 With one exception, you shouldn't copy any Tivaware code to your project folder.
-That one exception is `utils/uartstdio.c`: copy that file to your `src\` folder.
+That one exception is `utils/uartstdio.c`: copy that file to your `src` folder.
 
 ### What you need to modify in the Makefile
 Only modify the part of the Makefile sandwiched between
@@ -60,7 +59,8 @@ and
 ```
 Everything else is off-limits unless you know what you're doing!
 
-Although the folder structure described earlier simplifies and standardizes the build process, the Makefile needs to know where a few other things are:
+Although the folder structure described earlier simplifies and standardizes the build process, the Makefile needs to know where a few other things are.
+### (Linux users) Editing paths in the Makefile
 ```make
 # TIVAWARE_PATH: path to tivaware folder
 TIVAWARE_PATH = $(HOME)/Embedded/tivaware
@@ -74,6 +74,20 @@ DRIVERLIB_PATH = $(HOME)/Embedded/tivaware/driverlib/gcc
 LDLIBS = -L$(DRIVERLIB_PATH) -ldriver
 ```
 
+### (Windows users) Editing paths in the Makefile
+```make
+# TIVAWARE_PATH: path to tivaware folder
+TIVAWARE_PATH = $(HOME???)/Embedded/tivaware
+
+# FLASH_PATH: path to lm4flash
+FLASH_PATH = $(HOME???)/Embedded/lm4tools/lm4flash
+
+# additional libraries:
+# libdriver.a path: tivaware/driverlib/gcc/
+DRIVERLIB_PATH = $(HOME???)/Embedded/tivaware/driverlib/gcc
+LDLIBS = -L$(DRIVERLIB_PATH) -ldriver
+```
+
 ## Operation
 Once you're in the top folder of your project (where the Makefile is), build the project simply by entering `make` at a command prompt.
 
@@ -83,7 +97,7 @@ Entering `make flash` will flash the built binary file to the Tiva microcontroll
 
 To verify that everything works, open a terminal emulator (`screen` or `PuTTY`, for example).
 On my system, I do the following:
-```
+```console
 screen /dev/ttyACM0 115200
 ```
 
