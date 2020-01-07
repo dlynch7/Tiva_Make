@@ -22,8 +22,12 @@
 //
 //*****************************************************************************
 
-#include <stdint.h>
+#include <math.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+//#include <string.h>
+
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
 #include "driverlib/debug.h"
@@ -136,6 +140,11 @@ main(void)
     // Hello!
     //
     UARTprintf("Hello, world!\n");
+
+    // do some unnecessary floating-point math to see if the Makefile works:
+    float foo;
+    foo = 3.0/2.0;
+    UARTprintf("(int) foo = %d.\n",(int)foo);
 
     //
     // We are finished.  Hang around doing nothing.
