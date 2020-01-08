@@ -23,7 +23,7 @@ Install the software listed below, then clone this repo into your newly-created 
 This toolchain includes `arm-none-eabi-gcc` (a GCC cross compiler) and `arm-none-eabi-ld` (a GCC linker).
     * Windows users: just download and run the Windows installer.
     * Linux users: download and extract the tarball (`.tar.bz2`)
-    * Once installed, you will need to add the `bin` subfolder to your path, permanently (Linux users: edit your `.bashrc` file and then source it).
+    * Once installed, you will need to add the `bin` subfolder to your path, permanently (Linux users: edit your `.bashrc` file and then source it; Windows users add the folder to 'Path' using the environment variable editor).
 * All users: download the topmost executable (`.exe`) file from the [Tivaware](http://software-dl.ti.com/tiva-c/SW-TM4C/latest/index_FDS.html) download list.
     * Windows users: just download and run the installer. Take note of where the files are installed, because you'll need to enter this location in the Makefile.
     * Linux users: rename the file extension to `.zip` and extract the file. Compile with `make`.
