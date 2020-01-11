@@ -17,6 +17,8 @@ Linux users: also complete Step 2 of the reference linked above.
 Install the software listed below, then clone this repo into your newly-created `Embedded` folder.
 ### What you need to install
 * Windows users only: [MinGW](http://www.mingw.org/)
+* Windows users only: [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/)
+* Linux users only: [screen](https://help.ubuntu.com/community/Screen)
 * Windows users only: [LM4flash](http://www.ti.com/tool/LMFLASHPROGRAMMER) is a firmware-flashing tool (GUI and command line). Take note of where the installer puts LM4flash; you'll need to enter this location in the Makefile later.
 * Linux users: [lm4tools](https://github.com/utzig/lm4tools) - contains `lm4flash`, a command-line firmware flashing tool which our Makefile will use.
 * All users: download and install the [GNU Arm Embedded Toolchain](https://launchpad.net/gcc-arm-embedded/+download).
@@ -68,6 +70,12 @@ Everything else is off-limits unless you know what you're doing!
 Although the folder structure described earlier simplifies and standardizes the build process, the Makefile needs to know where a few other things are.
 ### (Linux users) Editing paths in the Makefile
 ```make
+XC_PATH = $(HOME)/Embedded/gcc-arm-none-eabi-5_4-2016q3/bin
+PORT=/dev/ttyACM0
+TERMEMU=screen
+
+...
+
 # TIVAWARE_PATH: path to tivaware folder
 TIVAWARE_PATH = $(HOME)/Embedded/tivaware
 
@@ -99,17 +107,14 @@ Entering `make clean` will delete all the files in the `build\` folder but nothi
 
 Entering `make flash` will flash the built binary file to the Tiva microcontroller.
 
-To verify that everything works, open a terminal emulator (`screen` or `PuTTY`, for example).
-On my system, I do the following:
 ```console
-screen /dev/ttyACM0 115200
+To verify that everything works, enter `make screen` (Linux) or `make putty` (Windows)
 ```
 
 `/dev/ttyACM0` is the port over which the Tiva and my laptop communicate.
-Windows users will need to specify a COM port instead.
+Windows users will need to specify a COM port instead (edit the `PORT` variable).
 
 I found the port name by entering `ls /dev/tty*` at a command prompt, before and after plugging in and powering on the Tiva, and looking at the difference in the command's output.
-
-The `115200` is the baud rate at which Tiva-PC communication happens.
+Windows users can either use the Device Manager or enter `mode` at a command prompt.
 
 If everything worked, you should now see `Hello World!` repeatedly printing to your terminal emulator.
