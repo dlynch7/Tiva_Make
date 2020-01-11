@@ -7,6 +7,10 @@
 #######################################
 # user configuration:
 #######################################
+XC_PATH = $(HOME)/Embedded/gcc-arm-none-eabi-5_4-2016q3/bin
+PORT=/dev/ttyACM0
+TERMEMU=screen
+
 # TARGET: name of the output file
 TARGET = main
 # MCU: part number to build for
@@ -49,11 +53,15 @@ LDFLAGS = --entry ResetISR --gc-sections -T$(LD_SCRIPT)
 #######################################
 # binaries
 #######################################
-CC = arm-none-eabi-gcc
-LD = arm-none-eabi-ld
+CC = $(XC_PATH)/arm-none-eabi-gcc
+LD = $(XC_PATH)/arm-none-eabi-ld
 # LD = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
 RM      = rm -f
+#if on windows use a different RM
+ifdef ComSpec
+    RM = del /Q
+endif
 MKDIR	= mkdir -p
 #######################################
 
@@ -77,7 +85,7 @@ $(OUTDIR):
 	$(MKDIR) $(OUTDIR)
 
 flash:
-		$(FLASH_PATH)/lm4flash $(shell pwd)/$(OUTDIR)/main.bin
+	$(FLASH_PATH)/lm4flash $(shell pwd)/$(OUTDIR)/main.bin
 
 clean:
 	-$(RM) $(OUTDIR)/*
@@ -86,9 +94,21 @@ clean:
 
 .PHONY: print_vars
 print_vars:
+	@echo "XC_PATH:" $(XC_PATH)
+	@echo "PORT:" $(PORT)
+	@echo "TERMEMU:" $(TERMEMU)
 	@echo "SRCDIR:" $(SRCDIR)
 	@echo "SOURCES:" $(SOURCES)
 	@echo "INCLUDES:" $(INCDIR)
 	@echo "TIVAWARE_PATH:" $(TIVAWARE_PATH)
 	@echo "LDLIBS:" $(LDLIBS)
 	@echo "OUTDIR:" $(OUTDIR)
+
+.PHONY: putty
+putty :
+	$(TERMEMU) -serial -sercfg 115200 $(PORT)
+
+.PHONY: screen
+screen :
+	$(TERMEMU) $(PORT) 115200
+
