@@ -34,7 +34,7 @@ This toolchain includes `arm-none-eabi-gcc` (a GCC cross compiler) and `arm-none
     * Linux users: rename the file extension to `.zip` and extract the file to a folder `~/Embedded/tivaware`. Compile with `make`. If `make` throws an errors and says it can't find the compiler, enter `sudo apt-get install gcc-arm-none-eabi`.
 
 ### Linux users: using LM4flash without sudo privileges
-You will have to set up some _udev rules_ to communicate with your device via USB (for example, using `lm4flash`) without using `sudo`.
+You will have to set up some _udev rules_ to communicate with your device via USB (for example, using `lm4flash`) without using `sudo` (references: [this post](http://chrisrm.com/howto-develop-on-the-ti-tiva-launchpad-using-linux/) and [this post](https://www.jann.cc/2012/12/11/getting_started_with_the_ti_stellaris_launchpad_on_linux.html#install-the-lm4flash-tool)).
 
 These rules won't take effect until you reboot.
 ```console
