@@ -9,6 +9,9 @@ Pretty simple, but the Makefile also supports fancier stuff, especially floating
 The setup instructions closely follow [this extremely helpful reference](http://chrisrm.com/howto-develop-on-the-ti-tiva-launchpad-using-linux/).
 
 In particular, the instructions on that page have you create a single `Embedded` folder, within which you install `Tivaware` and `lm4tools`. This simplifies the Makefile, as we'll see below.
+* For Linux users, the path to `Embedded` is `~/Embedded`.
+* For Windows users, the path to `Embedded` is `C:\Users\<user_name>\Embedded` (replace `<user_name>` with your user name).
+
 If you follow those instructions, you can also install OpenOCD, the Open On-Chip Debugger, but we don't need it for now, so I won't get into it in this project template.
 
 All users: complete Step 1 of the reference linked above.
@@ -16,11 +19,11 @@ Linux users: also complete Step 2 of the reference linked above.
 
 Install the software listed below, then clone this repo into your newly-created `Embedded` folder.
 ### What you need to install
-* Windows users only: [MinGW](http://www.mingw.org/)
-* Windows users only: [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/)
-* Linux users only: [screen](https://help.ubuntu.com/community/Screen)
-* Windows users only: [LM4flash](http://www.ti.com/tool/LMFLASHPROGRAMMER) is a firmware-flashing tool (GUI and command line). Take note of where the installer puts LM4flash; you'll need to enter this location in the Makefile later.
-* Linux users: [lm4tools](https://github.com/utzig/lm4tools) - contains `lm4flash`, a command-line firmware flashing tool which our Makefile will use.
+* Windows users: [MinGW](http://www.mingw.org/) (default path is `C:\MinGW`, this is fine.)
+* Windows users: [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/) (the installer automatically adds PuTTY to the Windows `PATH` variable, this is fine.)
+* Linux users: [screen](https://help.ubuntu.com/community/Screen) (`sudo apt-get install screen`)
+* Windows users: [LM4flash](http://www.ti.com/tool/LMFLASHPROGRAMMER) is a firmware-flashing tool (GUI and command line). Take note of where the installer puts LM4flash (`C:\Program Files (x86)\Texas Instruments\Stellaris\LM Flash Programmer\`); you'll need to enter this location in the Makefile later.You must also install [Stellaris ICDI drivers](http://www.ti.com/tool/STELLARIS_ICDI_DRIVERS), which you can do by following [TI's instructions](http://www.ti.com/tool/STELLARIS_ICDI_DRIVERS).
+* Linux users: [lm4tools](https://github.com/utzig/lm4tools) - contains `lm4flash`, a command-line firmware flashing tool which our Makefile will use. Clone the repo to `~/Embedded`, then `cd ~/Embedded/lm4tools/lm4flash/` and finally `make`.
 * All users: download and install the [GNU Arm Embedded Toolchain](https://launchpad.net/gcc-arm-embedded/+download).
 This toolchain includes `arm-none-eabi-gcc` (a GCC cross compiler) and `arm-none-eabi-ld` (a GCC linker).
     * Windows users: just download and run the Windows installer.
@@ -28,16 +31,32 @@ This toolchain includes `arm-none-eabi-gcc` (a GCC cross compiler) and `arm-none
     * Once installed, you will need to add the `bin` subfolder to your path, permanently (Linux users: edit your `.bashrc` file and then source it; Windows users add the folder to 'Path' using the environment variable editor).
 * All users: download the topmost executable (`.exe`) file from the [Tivaware](http://software-dl.ti.com/tiva-c/SW-TM4C/latest/index_FDS.html) download list.
     * Windows users: just download and run the installer. Take note of where the files are installed, because you'll need to enter this location in the Makefile.
-    * Linux users: rename the file extension to `.zip` and extract the file. Compile with `make`.
+    * Linux users: rename the file extension to `.zip` and extract the file to a folder `~/Embedded/tivaware`. Compile with `make`. If `make` throws an errors and says it can't find the compiler, enter `sudo apt-get install gcc-arm-none-eabi`.
 
 ### Linux users: using LM4flash without sudo privileges
-You can set up a _udev rule_ for your device.
-These rules won't take effect until you logout and login again.
+You will have to set up some _udev rules_ to communicate with your device via USB (for example, using `lm4flash`) without using `sudo`.
+
+These rules won't take effect until you reboot.
 ```console
-cd /etc/udev/rules.d
-echo "SUBSYSTEM=="usb", ATTRS{idVendor}=="1cbe", ATTRS{idProduct}=="00fd", MODE="0660"" | sudo tee 99-tiva-launchpad.rules
-# Remember to unplug and logout
+dan@thinkpad$ cd /etc/udev/rules.d
+dan@thinkpad:/etc/udev/rules.d$ echo "SUBSYSTEM=="usb", ATTRS{idVendor}=="1cbe", ATTRS{idProduct}=="00fd", MODE="0660"" | sudo tee 99-tiva-launchpad.rules
+
+dan@thinkpad:/etc/udev/rules.d$ sudo touch /etc/udev/rules.d/10-local.rules
+dan@thinkpad:/etc/udev/rules.d$ cat /etc/udev/rules.d/10-local.rules
+ATTR{idVendor}=="15ba", ATTR{idProduct}=="0004", GROUP="plugdev", MODE="0660" # Olimex Ltd. OpenOCD JTAG TINY
+ATTR{idVendor}=="067b", ATTR{idProduct}=="2303", GROUP="plugdev", MODE="0660" # Prolific Technology, Inc. PL2303 Serial Port
+ATTR{idVendor}=="10c4", ATTR{idProduct}=="ea60", GROUP="plugdev", MODE="0660" # USB Serial
+ATTR{idVendor}=="1cbe", ATTR{idProduct}=="00fd", GROUP="plugdev", MODE="0660" # TI Stellaris Launchpad
+
+dan@thinkpad:/etc/udev/rules.d$ sudo udevadm control --reload-rules
+dan@thinkpad:/etc/udev/rules.d$ sudo groupadd plugdev
+dan@thinkpad:/etc/udev/rules.d$ sudo usermod -aG plugdev,dialout $USER
+
+# Remember to unplug and logout:
+dan@thinkpad:/etc/udev/rules.d$ sudo reboot
 ```
+
+After rebooting, you should be able to run `make flash` without `sudo`, but you aren't ready to test it yet; follow the instructions in the next section first!
 
 ### Project structure
 Your project should reside in a folder.
@@ -68,36 +87,36 @@ and
 Everything else is off-limits unless you know what you're doing!
 
 Although the folder structure described earlier simplifies and standardizes the build process, the Makefile needs to know where a few other things are.
-### (Linux users) Editing paths in the Makefile
+### Editing paths in the Makefile
+The relevant part of the Makefile is shown below.
+Simply edit each variable (`XC_PATH`, `PORT`, etc.) according to the OS-specific comments (Makefile comments begin with a `#`) directly above that variable.
 ```make
+# Path to the ARM cross-compiler:
+# Linux users: the path will be $(HOME)/Embedded/gcc-arm-none-eabi-5_4-2016q3/bin
+# Windows users: the path will be "C:/Program Files (x86)/GNU Tools ARM Embedded/5.4 2016q3/bin"
 XC_PATH = $(HOME)/Embedded/gcc-arm-none-eabi-5_4-2016q3/bin
-PORT=/dev/ttyACM0
-TERMEMU=screen
 
-...
+# Serial port:
+# Linux users: the port will be something like /dev/ttyACM0
+# Windows users: the port will be something like COM4
+PORT=/dev/ttyACM0
+
+# Terminal emulator:
+# Linux: the terminal emulator is screen
+# Windows: the terminal emulator is putty (all lowercase)
+TERMEMU=screen
 
 # TIVAWARE_PATH: path to tivaware folder
 TIVAWARE_PATH = $(HOME)/Embedded/tivaware
 
-# FLASH_PATH: path to lm4flash
+# FLASH_PATH: path to lm4flash (Linux) or LM Flash Programmer (Windows)
+# Linux: $(HOME)/Embedded/lm4tools/lm4flash
+# Windows: "C:/Program Files (x86)/Texas Instruments/Stellaris/LM Flash Programmer"
 FLASH_PATH = $(HOME)/Embedded/lm4tools/lm4flash
 
-# additional libraries:
+# additional libraries
 # libdriver.a path: tivaware/driverlib/gcc/
-DRIVERLIB_PATH = $(HOME)/Embedded/tivaware/driverlib/gcc
-```
-
-### (Windows users) Editing paths in the Makefile
-```make
-# TIVAWARE_PATH: path to tivaware folder
-TIVAWARE_PATH = $(HOME???)/Embedded/tivaware
-
-# FLASH_PATH: path to lm4flash
-FLASH_PATH = $(HOME???)/Embedded/lm4tools/lm4flash
-
-# additional libraries:
-# libdriver.a path: tivaware/driverlib/gcc/
-DRIVERLIB_PATH = $(HOME???)/Embedded/tivaware/driverlib/gcc
+DRIVERLIB_PATH = $(TIVAWARE_PATH)/driverlib/gcc
 ```
 
 ## Operation
@@ -107,14 +126,6 @@ Entering `make clean` will delete all the files in the `build\` folder but nothi
 
 Entering `make flash` will flash the built binary file to the Tiva microcontroller.
 
-```console
 To verify that everything works, enter `make screen` (Linux) or `make putty` (Windows)
-```
-
-`/dev/ttyACM0` is the port over which the Tiva and my laptop communicate.
-Windows users will need to specify a COM port instead (edit the `PORT` variable).
-
-I found the port name by entering `ls /dev/tty*` at a command prompt, before and after plugging in and powering on the Tiva, and looking at the difference in the command's output.
-Windows users can either use the Device Manager or enter `mode` at a command prompt.
 
 If everything worked, you should now see `Hello World!` repeatedly printing to your terminal emulator.
