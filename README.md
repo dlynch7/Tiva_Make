@@ -12,18 +12,18 @@ In particular, the instructions on that page have you create a single `Embedded`
 * For Linux users, the path to `Embedded` is `~/Embedded`.
 * For Windows users, the path to `Embedded` is `C:\Users\<user_name>\Embedded` (replace `<user_name>` with your user name).
 
-If you follow those instructions, you can also install OpenOCD, the Open On-Chip Debugger, but we don't need it for now, so I won't get into it in this project template.
+If you follow the instructions linked above, you can also install OpenOCD, the Open On-Chip Debugger, but we don't need it for now, so I won't get into it in this project template.
 
-All users: complete Step 1 of the reference linked above.
-Linux users: also complete Step 2 of the reference linked above.
+**All users:** complete Step 1 of the reference linked above.
+**Linux users:** also complete Step 2 of the reference linked above.
 
 Install the software listed below, then clone this repo into your newly-created `Embedded` folder.
 ### What you need to install
 * Windows users: [MinGW](http://www.mingw.org/) (default path is `C:\MinGW`, this is fine.)
 * Windows users: [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/) (the installer automatically adds PuTTY to the Windows `PATH` variable, this is fine.)
 * Linux users: [screen](https://help.ubuntu.com/community/Screen) (`sudo apt-get install screen`)
-* Windows users: [LM4flash](http://www.ti.com/tool/LMFLASHPROGRAMMER) is a firmware-flashing tool (GUI and command line). Take note of where the installer puts LM4flash (`C:\Program Files (x86)\Texas Instruments\Stellaris\LM Flash Programmer\`); you'll need to enter this location in the Makefile later.You must also install [Stellaris ICDI drivers](http://www.ti.com/tool/STELLARIS_ICDI_DRIVERS), which you can do by following [TI's instructions](http://www.ti.com/tool/STELLARIS_ICDI_DRIVERS).
-* Linux users: [lm4tools](https://github.com/utzig/lm4tools) - contains `lm4flash`, a command-line firmware flashing tool which our Makefile will use. Clone the repo to `~/Embedded`, then `cd ~/Embedded/lm4tools/lm4flash/` and finally `make`.
+* Windows users: [LM Flash Programmer](http://www.ti.com/tool/LMFLASHPROGRAMMER) is TI's firmware-flashing tool (GUI and command line). Take note of where the installer puts it (`C:\Program Files (x86)\Texas Instruments\Stellaris\LM Flash Programmer\`); you'll need to enter this location in the Makefile later. You must also install [Stellaris ICDI drivers](http://www.ti.com/tool/STELLARIS_ICDI_DRIVERS), which you can do by following [TI's instructions](http://www.ti.com/tool/STELLARIS_ICDI_DRIVERS).
+* Linux users: [lm4tools](https://github.com/utzig/lm4tools) is a user-developed open-source alternative to TI's LM Flash Programmer. This repo contains `lm4flash`, a command-line firmware flashing tool which our Makefile will use. Clone the repo to `~/Embedded`, then `cd ~/Embedded/lm4tools/lm4flash/` and finally `make`.
 * All users: download and install the [GNU Arm Embedded Toolchain](https://launchpad.net/gcc-arm-embedded/+download).
 This toolchain includes `arm-none-eabi-gcc` (a GCC cross compiler) and `arm-none-eabi-ld` (a GCC linker).
     * Windows users: just download and run the Windows installer.
