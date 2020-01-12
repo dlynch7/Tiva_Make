@@ -7,9 +7,33 @@
 #######################################
 # user configuration:
 #######################################
+
+# Path to the ARM cross-compiler:
+# Linux users: the path will be $(HOME)/Embedded/gcc-arm-none-eabi-5_4-2016q3/bin
+# Windows users: the path will be "C:/Program Files (x86)/GNU Tools ARM Embedded/5.4 2016q3/bin"
 XC_PATH = $(HOME)/Embedded/gcc-arm-none-eabi-5_4-2016q3/bin
+
+# Serial port:
+# Linux users: the port will be something like /dev/ttyACM0
+# Windows users: the port will be something like COM4
 PORT=/dev/ttyACM0
+
+# Terminal emulator:
+# Linux: the terminal emulator is screen
+# Windows: the terminal emulator is putty (all lowercase)
 TERMEMU=screen
+
+# TIVAWARE_PATH: path to tivaware folder
+TIVAWARE_PATH = $(HOME)/Embedded/tivaware
+
+# FLASH_PATH: path to lm4flash (Linux) or LM Flash Programmer (Windows)
+# Linux: $(HOME)/Embedded/lm4tools/lm4flash
+# Windows: "C:/Program Files (x86)/Texas Instruments/Stellaris/LM Flash Programmer"
+FLASH_PATH = $(HOME)/Embedded/lm3tools/lm4flash
+
+# additional libraries
+# libdriver.a path: tivaware/driverlib/gcc/
+DRIVERLIB_PATH = $(TIVAWARE_PATH)/driverlib/gcc
 
 # TARGET: name of the output file
 TARGET = main
@@ -23,14 +47,8 @@ SOURCES := $(wildcard $(SRCDIR)/*.c)
 # INCLUDES := $(wildcard $(SRCDIR)/*.h)
 # OUTDIR: directory to use for output
 OUTDIR = build
-# TIVAWARE_PATH: path to tivaware folder
-TIVAWARE_PATH = $(HOME)/Embedded/tivaware
-# FLASH_PATH: path to lm4flash
-FLASH_PATH = $(HOME)/Embedded/lm4tools/lm4flash
 
-# additional libraries
-# libdriver.a path: tivaware/driverlib/gcc/
-DRIVERLIB_PATH = $(HOME)/Embedded/tivaware/driverlib/gcc
+
 LDLIBS = -L$(DRIVERLIB_PATH) -ldriver
 
 # LD_SCRIPT: linker script
