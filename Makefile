@@ -29,7 +29,7 @@ TIVAWARE_PATH = $(HOME)/Embedded/tivaware
 # FLASH_PATH: path to lm4flash (Linux) or LM Flash Programmer (Windows)
 # Linux: $(HOME)/Embedded/lm4tools/lm4flash
 # Windows: "C:/Program Files (x86)/Texas Instruments/Stellaris/LM Flash Programmer"
-FLASH_PATH = $(HOME)/Embedded/lm3tools/lm4flash
+FLASH_PATH = $(HOME)/Embedded/lm4tools/lm4flash
 
 # additional libraries
 # libdriver.a path: tivaware/driverlib/gcc/
